@@ -44,6 +44,5 @@ SELECT name from albums WHERE release_date BETWEEN 1990 and 1999;
 SELECT name, sales AS 'sales in millions' FROM albums WHERE sales < 20.0;
 
 -- 4f
-SELECT artist,name, genre FROM albums WHERE genre='Rock';
-
+SELECT NAME, genre FROM albums WHERE genre LIKE '%rock%';
 
