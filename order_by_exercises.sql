@@ -14,9 +14,9 @@ SELECT first_name, last_name FROM employees WHERE first_name IN ('Irene','Vidya'
 # Irene Aingworth
 # Maya Zyda
 # 5.
-SELECT emp_no, first_name, last_name FROM employees WHERE last_name LIKE 'e%' OR last_name LIKE '%e' ORDER BY emp_no;
+SELECT emp_no, first_name, last_name FROM employees WHERE last_name LIKE 'e%' AND last_name LIKE '%e' ORDER BY emp_no;
 # 10021 Ramzi Erde
-# 499994 Navin Argence
+# 499994 Tadahiro Erde
 # 6. 
 SELECT first_name, last_name, hire_date FROM employees ORDER BY hire_date DESC;
 # Bikash Covnot 2000-01-28 Newest
