@@ -8,10 +8,15 @@ SELECT DATABASE();
 		that is a 1 if the employee is still with the company and 0 if not.
 */
 
-SELECT first_name, last_name, dept_no, from_date, to_date, de.to_date LIKE '9999%' AS 'still_with_company'
-FROM employees
-JOIN dept_emp AS de USING(emp_no)
-LIMIT 5;
+SELECT		first_name, last_name, dept_no, from_date, to_date,
+			CASE
+				WHEN de.to_date LIKE '9999%' THEN 1
+			ELSE
+			0
+			END AS 'is_current_employee'				
+FROM		employees
+JOIN		dept_emp AS de USING(emp_no)
+ORDER BY	first_name, last_name;
 
 /*
 	2. Write a query that returns all employee names (previous and current), 
@@ -19,15 +24,16 @@ LIMIT 5;
 		depending on the first letter of their last name.
 */
 
-SELECT	first_name, last_name,
+SELECT	emp_no, first_name, last_name,
 		CASE 
-			WHEN first_name BETWEEN 'A' AND 'H'	THEN 'A-H'
-			WHEN first_name BETWEEN 'I' AND 'Q'	THEN 'I-Q'
-			WHEN first_name BETWEEN 'R' AND 'Z'	THEN 'R-Z'
+			WHEN LEFT(first_name,1) BETWEEN 'A' AND 'H'	THEN 'A-H'
+			WHEN LEFT(first_name,1) BETWEEN 'I' AND 'Q'	THEN 'I-Q'
+			WHEN LEFT(first_name,1) BETWEEN 'R' AND 'Z'	THEN 'R-Z'
 		END AS 'alpha_group'
 FROM employees
 JOIN dept_emp AS de USING(emp_no)
-LIMIT 5;
+ORDER BY first_name, last_name
+LIMIT 50;
 
 /*
 	3. How many employees (current or previous) were born in each decade
@@ -43,8 +49,8 @@ SELECT
 		CASE 
 			WHEN birth_date BETWEEN '1950-01-01' AND '1959-12-31'	THEN '50\'s'
 			WHEN birth_date BETWEEN '1960-01-01' AND '1969-12-31'	THEN '60\'s'
-		END AS 'decades', 
-		count(*)
+		END AS 'Decades', 
+		count(*) AS 'Total'
 FROM employees
 GROUP BY decades
 ;
@@ -54,10 +60,18 @@ GROUP BY decades
 	4. What is the current average salary for each of the following department groups: 
 		R&D, Sales & Marketing, Prod & QM, Finance & HR, Customer Service?
 */
-SELECT dept_name, AVG(salary)
-FROM employees
-JOIN dept_emp as de USING(emp_no)
-JOIN departments as d USING(dept_no)
-JOIN salaries as s USING(emp_no)
-GROUP BY dept_name
+SELECT	CASE
+			WHEN dept_name IN ('Sales', 'Marketing') THEN 'Sales & Marketing'
+			WHEN dept_name IN ('Research', 'Development') THEN 'R&D'
+			WHEN dept_name IN ('Production', 'Quality Management') THEN 'Prod & QM'
+			WHEN dept_name IN ('Finance','Human Resources') THEN 'Finance & HR'
+			WHEN dept_name IN ('Customer Service') THEN 'Customer Service'
+			ELSE dept_name
+		END as dept_group,
+		AVG(salary)
+FROM 	employees
+JOIN 	dept_emp as de USING(emp_no)
+JOIN 	departments as d USING(dept_no)
+JOIN 	salaries as s USING(emp_no)
+GROUP BY	dept_group
 ;
