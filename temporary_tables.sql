@@ -27,7 +27,8 @@ ALTER TABLE noether_2034.employees_with_department DROP last_name;
 /*
 	2. Create a temporary table based on the payment table from the sakila database.
 	
-	Write the SQL necessary to transform the amount column such that it is stored as an integer representing the number of cents of the payment. For 	example, 1.99 should become 199.
+	Write the SQL necessary to transform the amount column such that it is stored as an 
+	integer representing the number of cents of the payment. For 	example, 1.99 should become 199.
 */
 USE sakila;
 SELECT * FROM payment LIMIT 5;
@@ -41,5 +42,14 @@ SELECT CAST(amount*100 AS UNSIGNED) AS CENTS
 FROM noether_2034.temp_payment;
 
 /*
-	3. 
+	3. Find out how the current average pay in each department compares to the overall 
+	current pay for everyone at the company. In order to make the 	comparison easier, you should use the Z-score for salaries. In terms of salary, 
+	what is the best department right now to work for? The worst?
 */
+USE employees;
+SELECT 
+	salary,
+	(salary-(SELECT AVG(salary)) FROM salaries)
+	/
+	(SELECT stddev(salary) FROM salaries) AS zscore
+FROM salaries;
