@@ -6,13 +6,21 @@ SELECT DATABASE();
 	1. Write a query that returns all employees, their department number, 
 		their start date, their end date, and a new column 'is_current_employee'
 		that is a 1 if the employee is still with the company and 0 if not.
+		
+		300,124
+		vs
+		331,603
+		
+		REMOVE DUPLICATES
+		MAX(de.to_date)
 */
 
-SELECT		first_name, last_name, dept_no, from_date, to_date,
+SELECT		first_name, last_name, de.dept_no, de.from_date, de.to_date,
+			-- to_date > now()
 			CASE
-				WHEN de.to_date LIKE '9999%' THEN 1
+				WHEN de.to_date LIKE '9999%' THEN True
 			ELSE
-			0
+			False
 			END AS 'is_current_employee'				
 FROM		employees
 JOIN		dept_emp AS de USING(emp_no)
@@ -24,14 +32,14 @@ ORDER BY	first_name, last_name;
 		depending on the first letter of their last name.
 */
 
-SELECT	emp_no, first_name, last_name,
-		CASE 
-			WHEN LEFT(first_name,1) BETWEEN 'A' AND 'H'	THEN 'A-H'
-			WHEN LEFT(first_name,1) BETWEEN 'I' AND 'Q'	THEN 'I-Q'
-			WHEN LEFT(first_name,1) BETWEEN 'R' AND 'Z'	THEN 'R-Z'
-		END AS 'alpha_group'
-FROM employees
-JOIN dept_emp AS de USING(emp_no)
+SELECT		emp_no, first_name, last_name,
+			CASE 
+				WHEN LEFT(first_name,1) BETWEEN 'A' AND 'H'	THEN 'A-H'
+				WHEN LEFT(first_name,1) BETWEEN 'I' AND 'Q'	THEN 'I-Q'
+				WHEN LEFT(first_name,1) BETWEEN 'R' AND 'Z'	THEN 'R-Z'
+			END AS 'alpha_group'
+FROM 		employees
+JOIN 		dept_emp AS de USING(emp_no)
 ORDER BY first_name, last_name
 LIMIT 50;
 
@@ -69,9 +77,10 @@ SELECT	CASE
 			ELSE dept_name
 		END as dept_group,
 		AVG(salary)
-FROM 	employees
-JOIN 	dept_emp as de USING(emp_no)
-JOIN 	departments as d USING(dept_no)
-JOIN 	salaries as s USING(emp_no)
+FROM 	dept_emp as de
+	JOIN 	departments as d USING(dept_no)
+	JOIN 	salaries as s USING(emp_no)
+WHERE de.to_date>NOW()
+		AND s.to_date>NOW()
 GROUP BY	dept_group
 ;
