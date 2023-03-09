@@ -31,25 +31,64 @@ ALTER TABLE noether_2034.employees_with_department DROP last_name;
 	integer representing the number of cents of the payment. For 	example, 1.99 should become 199.
 */
 USE sakila;
-SELECT * FROM payment LIMIT 5;
-
+SELECT
+    *
+FROM
+    payment
+LIMIT 5;
 CREATE TEMPORARY TABLE noether_2034.temp_payment AS (
-SELECT amount FROM payment);
+    SELECT
+        amount
+    FROM
+        payment
+);
 
-SELECT * FROM noether_2034.temp_payment LIMIT 10;
+SELECT
+    *
+FROM
+    noether_2034.temp_payment
+LIMIT 10;
+
 -- CAST DOES NOT DO INT. INT = UNSIGNED
-SELECT CAST(amount*100 AS UNSIGNED) AS CENTS
-FROM noether_2034.temp_payment;
+SELECT
+CAST(amount * 100 AS UNSIGNED) AS CENTS
+FROM
+    noether_2034.temp_payment;
+
 
 /*
-	3. Find out how the current average pay in each department compares to the overall 
-	current pay for everyone at the company. In order to make the 	comparison easier, you should use the Z-score for salaries. In terms of salary, 
-	what is the best department right now to work for? The worst?
-*/
+ 3. Find out how the current average pay in each department compares to the overall 
+ current pay for everyone at the company. In order to make the 	comparison easier, you should use the Z-score for salaries. In terms of salary, 
+ what is the best department right now to work for? The worst?
+ */
 USE employees;
-SELECT 
-	salary,
-	(salary-(SELECT AVG(salary)) FROM salaries)
-	/
-	(SELECT stddev(salary) FROM salaries) AS zscore
-FROM salaries;
+
+SELECT
+    salary,
+    (salary - (
+            SELECT
+                AVG(salary))
+        FROM
+            salaries) / (
+        SELECT
+            stddev(salary)
+        FROM
+            salaries) AS zscore
+FROM
+    salaries;
+
+
+SELECT
+    salary,
+    (salary - (
+            SELECT
+                avg(salary))
+        FROM
+            salaries) / (
+        SELECT
+            stddev(salary)
+        FROM
+            salaries) AS zscore
+FROM
+    salaries;
+

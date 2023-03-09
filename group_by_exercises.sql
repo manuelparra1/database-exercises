@@ -12,14 +12,14 @@ SELECT last_name FROM employees WHERE last_name LIKE 'e%e' GROUP BY last_name;
 SELECT DISTINCT CONCAT(first_name, ' ', last_name) FROM employees WHERE last_name LIKE 'e%e';
 
 # 5.
-SELECT DISTINCT last_name FROM employees WHERE (last_name LIKE '%q%' AND last_name NOT LIKE '%qu%');
+SELECT DISTINCT last_name FROM employees WHERE (last_name LIKE 'q%' AND last_name NOT LIKE 'qu%');
 # Names with 'q' and not 'qu'
 
 # 6.
-SELECT last_name, COUNT(last_name) FROM employees WHERE (last_name LIKE '%q%' AND last_name NOT LIKE '%qu%') GROUP BY last_name ORDER BY last_name;
+SELECT last_name, COUNT(last_name) FROM employees GROUP BY last_name ORDER BY last_name;
 
 # 7.
-SELECT first_name AS 'First Name', gender AS 'Gender', count(*) AS 'Total' FROM employees WHERE first_name IN ('Irena', 'Vidya', 'Maya') GROUP BY first_name, gender ORDER BY first_name, gender DESC;
+SELECT first_name AS 'First Name', gender AS 'Gender', count(*) AS 'Total' FROM employees WHERE first_name IN ('Irena', 'Vidya', 'Maya') GROUP BY first_name, gender ORDER BY first_name, gender;
 
 /*
 
@@ -76,34 +76,19 @@ ORDER BY count DESC;
 	8c.
 	count duplicate usernames for username column
 */
-
 # 13,251 Results
-# Question for Instructor how to get total column sum of duplicates
-SELECT
-LOWER(
-	CONCAT(
-		SUBSTR(first_name,1,1),
-		SUBSTR(last_name,1,4), '_',
-		DATE_FORMAT(birth_date,'%m'),
-		DATE_FORMAT(birth_date,'%y')
-	)
-)AS 'username',
-COUNT(
-	LOWER(
-		CONCAT(
-			SUBSTR(first_name,1,1),
-			SUBSTR(last_name,1,4), '_',
-			DATE_FORMAT(birth_date,'%m'),
-			DATE_FORMAT(birth_date,'%y')
-)
-)
-)AS 'count'
-FROM employees
-GROUP BY username
-HAVING count > 1
-ORDER BY count DESC;
+
+
+
+
+
+
 
 #	9a. avg() salary each employee
+
+
+
+
 SELECT 
   emp_no, 
   AVG(salary) AS 'Salary Average' 
@@ -111,6 +96,10 @@ FROM
   salaries 
 GROUP BY 
   emp_no;
+
+  
+  
+  
 #	9b. Total count of all current employees in each department
 SELECT 
   dept_no, 
@@ -119,6 +108,10 @@ FROM
   dept_emp 
 GROUP BY 
   dept_no;
+  
+  
+  
+  
 # 9c. different salaries for each employee
 SELECT emp_no, COUNT(salary) AS 'Total Different Salaries' FROM salaries GROUP BY emp_no;
 
